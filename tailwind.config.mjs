@@ -5,6 +5,12 @@ export default {
   content: ['./src/**/*.{html,js,jsx,tsx,ts}'],
   theme: {
     extend: {
+      spacing: {
+        'x-sm': '20px',
+        'x-lg': '32px',
+        'y-sm': '20px',
+        'y-lg': '32px',
+      },
       colors: {
         base: {
           black: '#000000',
