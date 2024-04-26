@@ -15,6 +15,10 @@ export default {
           border: '#FFBFBF',
           background: '#FFDADA',
         },
+        trends: {
+          upward: '#E45A5A',
+          downward: '#3C75DF',
+        },
         gray: {
           '03': '#D1D3D7',
           50: '#FAFAFA',

@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Switch } from '@headlessui/react';
+import axios from '@/libs/axios';
 
 const HomePage = () => {
   const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get('/v3/ping');
+      const res2 = await axios.get('/bookmark');
+      console.log(res, res2);
+    })();
+  }, []);
 
   return (
     <div>

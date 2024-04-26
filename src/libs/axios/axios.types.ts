@@ -7,9 +7,7 @@ export interface ErrorRes {
 }
 
 export interface ApiRes<T> {
-  data: {
-    code: number;
-    message: string;
-    data: T;
-  };
+  code: number;
+  message: string;
+  data: T;
 }

@@ -1,6 +1,6 @@
 import axiosBase from 'axios';
 import qs from 'qs';
-import type { ApiRes, ErrorRes } from './axios.types';
+import type { ErrorRes } from './axios.types';
 
 /** 임의로 추가 **/
 export class ApiError {
@@ -24,15 +24,17 @@ const axios = axiosBase.create({
 });
 
 axios.interceptors.response.use(
-  ({ data: response }: { data: ApiRes<any> }) => {
+  response => {
     /** 사전 정의된 api 에러 */
-    if (response.data.code < 0) {
+    if (typeof response.data?.code === 'number' && response.data.code < 0) {
       throw new ApiError(response.data);
     }
 
-    return response.data.data;
+    return response.data;
   },
   ({ response = {} }) => {
+    // error_code:429 -> 너무 많이 호출했을 때
+    // error_message:''
     return Promise.reject(new ApiError(response));
   }
 );

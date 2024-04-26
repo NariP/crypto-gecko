@@ -10,7 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "type:gen": "sh -c src/generator/swagger-typescript-api.sh"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.19",
