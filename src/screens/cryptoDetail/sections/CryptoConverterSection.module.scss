@@ -1,0 +1,11 @@
+.input_wrapper {
+  @apply border border-gray-300 rounded-[8px] flex items-center overflow-hidden w-full md:w-[calc(50%_-_4px)];
+}
+
+.input_label {
+  @apply text-gray-600 text-body1-bold px-[8px] py-[4px];
+}
+
+.input {
+  @apply px-[8px] py-[4px] flex-1 text-gray-800 text-body1-bold;
+}
