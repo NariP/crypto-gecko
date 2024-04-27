@@ -45,7 +45,7 @@ const Bookmark = ({ id }: BookmarkProps) => {
   };
 
   return (
-    <button type="button" onClick={toggleBookmark}>
+    <button className="flex-grow-0 flex-shrink-0" type="button" onClick={toggleBookmark}>
       <StarIcon className={clsx('h-5 w-5 fill-gray-400', isActive && 'fill-yellow-400')} />
     </button>
   );
