@@ -15,6 +15,7 @@ export default {
         base: {
           black: '#000000',
           white: '#FFFFFF',
+          primary: '#35AF00',
         },
         error: {
           default: '#E33C3C',

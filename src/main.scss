@@ -30,6 +30,7 @@
     -ms-text-size-adjust: none;
     -moz-text-size-adjust: none;
     scroll-behavior: smooth;
+    box-sizing: border-box;
   }
 
   a {
@@ -43,7 +44,13 @@
   }
 
   html,
-  body {
+  body,#root {
     height: theme('height.full');
+  }
+}
+
+@utilities {
+  .stroke-linecap-round {
+    stroke-linecap: round;
   }
 }

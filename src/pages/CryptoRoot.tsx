@@ -1,6 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import TopNav from '@/components/TopNav';
 const CryptoRoot = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -13,9 +14,7 @@ const CryptoRoot = () => {
 
   return (
     <>
-      <header className="border border-b-gray-300">
-        <h1>nav 코인 홈 페이지</h1>
-      </header>
+      <TopNav>{pathname === '/crypto/market' ? '코인 홈' : '코인 북마크'}</TopNav>
       <div className="px-x-sm py-y-sm">
         <Tab.Group defaultIndex={defaultIndex}>
           <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">

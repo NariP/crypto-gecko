@@ -1,6 +1,12 @@
-// 페이지의 콘텐츠 로딩 UI
+import Page from '@/components/Page';
+import Spinner from '@/components/Spinner';
+
 const ContentsLoader = () => {
-  return <div>로딩 중..ㅎ</div>;
+  return (
+    <Page>
+      <Spinner className="my-[60px] md:my-[68px]" />
+    </Page>
+  );
 };
 
 export default ContentsLoader;

@@ -1,6 +1,7 @@
 import { useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query';
 import queries from '@/apis/queries';
 import CryptoTable from '@/components/CryptoTable';
+import Page from '@/components/Page';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
 import type { MarketsListRes } from '@/apis/coins';
 
@@ -29,16 +30,18 @@ const CryptoBookmarkContents = () => {
   });
 
   return (
-    <CryptoTable>
-      <CryptoTable.Header />
-      <CryptoTable.Body>
-        {data?.pages === undefined || data?.pages?.length <= 0 ? (
-          <CryptoTable.RowNoData />
-        ) : (
-          <CryptoTable.Row pages={data.pages} />
-        )}
-      </CryptoTable.Body>
-    </CryptoTable>
+    <Page>
+      <CryptoTable>
+        <CryptoTable.Header />
+        <CryptoTable.Body>
+          {data?.pages === undefined || data?.pages?.length <= 0 ? (
+            <CryptoTable.RowNoData />
+          ) : (
+            <CryptoTable.Row pages={data.pages} />
+          )}
+        </CryptoTable.Body>
+      </CryptoTable>
+    </Page>
   );
 };
 
