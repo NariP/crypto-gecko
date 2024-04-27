@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import BookmarkPage from '@/pages/BookmarkPage';
+import CryptoBookmarkPage from '@/pages/CryptoBookmarkPage';
 import CryptoDetailPage from '@/pages/CryptoDetailPage';
 import CryptoRoot from '@/pages/CryptoRoot';
 import ErrorPage from '@/pages/ErrorPage';
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
         },
         {
           path: '/crypto/bookmark',
-          element: <BookmarkPage />,
+          element: <CryptoBookmarkPage />,
         },
       ],
     },

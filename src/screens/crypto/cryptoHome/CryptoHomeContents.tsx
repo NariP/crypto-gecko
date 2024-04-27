@@ -1,7 +1,6 @@
 import { useQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import queries from '@/apis/queries';
-import Bookmark from '@/components/Bookmark';
+import CryptoTable from '@/components/CryptoTable';
 import { useCryptoHomeToolbarStore } from '@/stores/useCryptoHomeToolbarStore';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
 import type { MarketsListRes } from '@/apis/coins';
@@ -34,50 +33,16 @@ const CryptoHomeContents = () => {
 
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <th />
-            <th>자산</th>
-            <th />
-            <th>Price</th>
-            <th>1H</th>
-            <th>24H</th>
-            <th>7D</th>
-            <th>24H Volume</th>
-          </tr>
-        </thead>
-        {data?.pages === undefined || data?.pages?.length <= 0 ? (
-          <tbody>
-            <tr>
-              <td>데이터가 없습니다.</td>
-            </tr>
-          </tbody>
-        ) : (
-          <tbody>
-            {data.pages.map(p =>
-              p.map(m => {
-                return (
-                  <tr key={m.id}>
-                    <td>
-                      <Bookmark id={m.id} />
-                    </td>
-                    <td>
-                      <Link to={`/crypto/${m.id}`}>{m.name}</Link>
-                    </td>
-                    <td>{m.symbol.toUpperCase()}</td>
-                    <td>{m.current_price}</td>
-                    <td>{m.price_change_percentage_1h_in_currency}</td>
-                    <td>{m.price_change_percentage_24h_in_currency}</td>
-                    <td>{m.price_change_percentage_7d_in_currency}</td>
-                    <td>{m.total_volume}</td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        )}
-      </table>
+      <CryptoTable>
+        <CryptoTable.Header />
+        <CryptoTable.Body>
+          {data?.pages === undefined || data?.pages?.length <= 0 ? (
+            <CryptoTable.RowNoData />
+          ) : (
+            <CryptoTable.Row pages={data.pages} />
+          )}
+        </CryptoTable.Body>
+      </CryptoTable>
       <button
         type="button"
         disabled={
