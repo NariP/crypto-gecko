@@ -1,6 +1,6 @@
 import { NumberInCurrency } from '@/@types/currency';
 import axios from '@/libs/axios';
-import type { CoinsDetailParams } from '@/@types/swagger';
+import type { CoinsDetailParams, MarketsListParams } from '@/@types/swagger';
 
 const PREFIX = '/v3/coins';
 
@@ -44,5 +44,27 @@ interface CoinsDetailRes {
 }
 
 /** 코인 상세 정보 조회 API */
-export const getCoinDetail = ({ id, ...query }: CoinsDetailParams) =>
+export const getCoinsDetail = ({ id, ...query }: CoinsDetailParams) =>
   axios.get<any, CoinsDetailRes>(`${PREFIX}/${id}`, { params: query });
+
+interface Markets {
+  /** 코인 id */
+  id: string;
+  /** 코인 이름 */
+  name: string;
+  /** 코인 심볼 */
+  symbol: string;
+  /** 코인 현재가 */
+  current_price: number;
+  price_change_percentage_1h_in_currency: number;
+  price_change_percentage_7d_in_currency: number;
+  price_change_percentage_24h_in_currency: number;
+  /** 거래대금 */
+  total_volume: number;
+}
+
+export type MarketsListRes = Markets[];
+
+/** 코인 마켓 정보 리스트 조회 API */
+export const getCoinsMarkets = (params: MarketsListParams) =>
+  axios.get<any, MarketsListRes>(`${PREFIX}/markets`, { params });
