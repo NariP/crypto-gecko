@@ -14,7 +14,7 @@ const CryptoBookmarkContents = () => {
 
   return (
     <section className="contents_section">
-      <CryptoBookmarkTable ids={bookmarks.join('')} />
+      <CryptoBookmarkTable ids={bookmarks.join(',')} />
     </section>
   );
 };
