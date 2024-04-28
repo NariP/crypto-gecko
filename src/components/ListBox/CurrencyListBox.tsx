@@ -7,12 +7,13 @@ interface CurrencyOption {
   label: string;
 }
 
-const CurrencyListBox = () => {
+const CurrencyListBox = ({ className }: { className?: string }) => {
   const currency = useCurrencyStore(state => state.currency);
   const setCurrency = useCurrencyStore(state => state.setCurrency);
 
   return (
     <ListBox
+      className={className}
       selected={OPTIONS.find(o => o.id === currency) as CurrencyOption}
       options={OPTIONS}
       onChange={(option: CurrencyOption) => setCurrency(option.id)}

@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import clsx from 'clsx';
 
 interface Option {
   id: string;
@@ -12,13 +13,14 @@ interface ListBoxProps<O extends Option> {
   selected: O;
   options: O[];
   onChange: (option: O) => void;
+  className?: string;
 }
 
-const ListBox = <O extends Option>({ selected, options, onChange }: ListBoxProps<O>) => {
+const ListBox = <O extends Option>({ selected, options, onChange, className }: ListBoxProps<O>) => {
   return (
     <Listbox value={selected} onChange={onChange}>
-      <div className="relative mt-1">
-        <Listbox.Button className="relative min-w-[200px] w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md shadow-gray-100 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 text-label1-bold md:text-body1-bold hover:cursor-pointer">
+      <div className={clsx('relative', className)}>
+        <Listbox.Button className="relative md:min-w-[200px] w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md shadow-gray-100 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 text-label1-bold md:text-body1-bold hover:cursor-pointer">
           <span className="block truncate text-gray-900">{selected.label}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon className="h-5 w-5 fill-gray-900" aria-hidden="true" />

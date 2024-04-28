@@ -49,8 +49,19 @@
   }
 }
 
-@utilities {
-  .stroke-linecap-round {
-    stroke-linecap: round;
+@layer components {
+  /** 콘텐츠 내부 섹션 기본 UI */
+  .contents_section {
+    @apply gap-[16px] px-x-sm md:gap-[8px] md:px-x-lg;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .inline-flex-center {
+    @apply inline-flex justify-center items-center;
   }
 }

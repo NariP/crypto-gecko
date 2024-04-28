@@ -26,6 +26,9 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.6.8
+      big.js:
+        specifier: 5.2.2
+        version: 5.2.2
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -63,6 +66,9 @@ importers:
       '@nr2p/prettier-config':
         specifier: ^1.0.3
         version: 1.0.3(prettier@3.2.5)
+      '@types/big.js':
+        specifier: ^6.2.2
+        version: 6.2.2
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -692,6 +698,9 @@ packages:
   '@types/babel__traverse@7.20.5':
     resolution: {integrity: sha512-WXCyOcRtH37HAUkpXhUduaxdm82b4GSlyTqajXviN4EfiuPgNYR109xMCKvpl6zPIpua0DGlMEDCq+g8EdoheQ==}
 
+  '@types/big.js@6.2.2':
+    resolution: {integrity: sha512-e2cOW9YlVzFY2iScnGBBkplKsrn2CsObHQ2Hiw4V1sSyiGbgWL8IyqE3zFi1Pt5o1pdAtYkDAIsF3KKUPjdzaA==}
+
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
@@ -966,6 +975,9 @@ packages:
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  big.js@5.2.2:
+    resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -3142,6 +3154,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.24.0
 
+  '@types/big.js@6.2.2': {}
+
   '@types/cookie@0.6.0': {}
 
   '@types/eslint@8.56.10':
@@ -3497,6 +3511,8 @@ snapshots:
       - debug
 
   balanced-match@1.0.2: {}
+
+  big.js@5.2.2: {}
 
   binary-extensions@2.3.0: {}
 

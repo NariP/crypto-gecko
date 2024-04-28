@@ -4,7 +4,7 @@ import type { CoinsDetailParams, MarketsListParams } from '@/@types/swagger';
 
 const PREFIX = '/v3/coins';
 
-interface CoinsDetailRes {
+export interface CoinsDetailRes {
   /** 코인 상세 설명 */
   description: {
     ko: string;
