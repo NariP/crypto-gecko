@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
-import { cryptoPercentage, cryptoPercentageColor } from '@/utils/crypto.ts';
+import { cryptoPercentage, cryptoPercentageColor } from '@/utils/crypto';
 import { localeCurrencySymbol } from '@/utils/localeCurrency';
 import styles from './CryptoSummarySection.module.scss';
 import type { CoinsDetailRes } from '@/apis/coins';
