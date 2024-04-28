@@ -48,6 +48,13 @@ axios.interceptors.response.use(
       const status = response.data.status;
       error = { code: status.error_code, message: status.error_message } as ErrorRes;
     }
+
+    // api gecko error 2
+    if (response.data?.error) {
+      const status = response.status;
+      error = { code: status, message: response.data.error } as ErrorRes;
+    }
+
     return Promise.reject(new ApiError(error));
   }
 );
