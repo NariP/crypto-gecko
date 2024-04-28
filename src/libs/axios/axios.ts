@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es';
 import axiosBase from 'axios';
 import qs from 'qs';
 import type { ErrorRes } from './axios.types';
@@ -23,6 +24,13 @@ const axios = axiosBase.create({
   paramsSerializer: params => qs.stringify(params, { arrayFormat: 'comma' }),
 });
 
+axios.interceptors.request.use(config => {
+  if (config.url?.startsWith('/v3')) {
+    config.headers['x-cg-demo-api-key'] = import.meta.env.VITE_GECKO_API_KEY;
+  }
+  return config;
+});
+
 axios.interceptors.response.use(
   response => {
     /** 사전 정의된 api 에러 */
@@ -33,9 +41,14 @@ axios.interceptors.response.use(
     return response.data;
   },
   ({ response = {} }) => {
-    // error_code:429 -> 너무 많이 호출했을 때
-    // error_message:''
-    return Promise.reject(new ApiError(response));
+    let error: ErrorRes = response.data || { code: response.status };
+
+    // api gecko error status
+    if (!isEmpty(response.data?.status)) {
+      const status = response.data.status;
+      error = { code: status.error_code, message: status.error_message } as ErrorRes;
+    }
+    return Promise.reject(new ApiError(error));
   }
 );
 

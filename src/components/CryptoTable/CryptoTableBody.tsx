@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Bookmark from '@/components/Bookmark';
+import useBookmarks, { useBookmarksData } from '@/hooks/useBookmarks.ts';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
 import { cryptoPercentage, cryptoPercentageColor, toUpperCoinSymbol } from '@/utils/crypto';
 import { localeCurrencySymbol } from '@/utils/localeCurrency';
@@ -24,6 +25,8 @@ export const CryptoTableRowNoData = () => {
 };
 
 export const CryptoTableRow = ({ pages }: { pages: MarketsListRes[] }) => {
+  const { bookMarksSet } = useBookmarksData();
+  const { toggleOn, toggleOff } = useBookmarks();
   const currency = useCurrencyStore(state => state.currency);
 
   return (
@@ -36,7 +39,12 @@ export const CryptoTableRow = ({ pages }: { pages: MarketsListRes[] }) => {
               className="[&>td]:px-[8px] [&>td]:py-[12px] [&>td]:text-body1-regular border-b border-b-gray-300"
             >
               <td>
-                <Bookmark id={m.id} />
+                <Bookmark
+                  id={m.id}
+                  bookmarks={bookMarksSet}
+                  toggleOn={toggleOn}
+                  toggleOff={toggleOff}
+                />
               </td>
               <td>
                 <Link to={`/crypto/${m.id}`} className="font-bold">
