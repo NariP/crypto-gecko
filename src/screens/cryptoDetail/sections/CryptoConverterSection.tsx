@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Big from 'big.js';
-import { z } from 'zod';
+import { type ZodError, z } from 'zod';
 import usePrevState from '@/hooks/usePrevState';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
 import { toUpperCoinSymbol } from '@/utils/crypto';
@@ -32,6 +32,11 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     setErrors(prev => (name ? { ...prev, [name]: '' } : INITIAL_ERRORS));
   };
 
+  const updateError = (error: ZodError<string>, inputName: InputKeys) => {
+    const message = error.flatten().formErrors[0];
+    setErrors(prev => ({ ...prev, [inputName]: message }));
+  };
+
   const prevCurrentCurrencyPrice = usePrevState(currentCurrencyPrice);
   useEffect(() => {
     // data 가 변경되어 currentCurrencyPrice 변경이 있는 경우에만 최신값 기준으로 value 세팅
@@ -46,13 +51,12 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     }
   }, [currentCurrencyPrice, cryptoPrice, currency, prevCurrentCurrencyPrice]);
 
-  const handleCryptoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeCryptoHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     const validation = cryptoCurrencySchema.safeParse(value);
     if (!validation.success) {
-      const message = validation.error.flatten().formErrors[0];
-      setErrors(prev => ({ ...prev, cryptoCurrency: message }));
+      updateError(validation.error, 'cryptoCurrency');
       return;
     }
 
@@ -65,22 +69,20 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     resetError();
   };
 
-  const handleCurrencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeCurrencyHandelr = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value: rawValue } = event.target;
     const value = rawValue.replace(/,/g, '');
 
     const currencyValidation = currencySchema.safeParse(value);
     if (!currencyValidation.success) {
-      const message = currencyValidation.error.flatten().formErrors[0];
-      setErrors(prev => ({ ...prev, currency: message }));
+      updateError(currencyValidation.error, 'currency');
       return;
     }
 
     if (currency === 'krw') {
       const krwValidation = krwSchema.safeParse(value);
       if (!krwValidation.success) {
-        const message = krwValidation.error.flatten().formErrors[0];
-        setErrors(prev => ({ ...prev, currency: message }));
+        updateError(krwValidation.error, 'currency');
         return;
       }
     }
@@ -91,23 +93,20 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     resetError();
   };
 
-  const handleCurrencyPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+  const onPasteCurrencyHandler = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
 
     const value = event.clipboardData.getData('text/plain');
 
     const currencyValidation = currencyPasteSchema.safeParse(value);
     if (!currencyValidation.success) {
-      const message = currencyValidation.error.flatten().formErrors[0];
-      setErrors(prev => ({ ...prev, currency: message }));
+      updateError(currencyValidation.error, 'currency');
       return;
     }
 
     if (currency === 'krw') {
       const krwValidation = krwSchema.safeParse(value);
       if (!krwValidation.success) {
-        const message = krwValidation.error.flatten().formErrors[0];
-        setErrors(prev => ({ ...prev, currency: message }));
         return;
       }
     }
@@ -121,7 +120,6 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
   return (
     <section className="contents_section">
       <h3 className="text-base-text text-title2-bold pb-[16px]">{symbol} 가격 계산</h3>
-
       <div className="flex flex-wrap gap-[8px]">
         <div className={styles.field_wrapper}>
           <div className={styles.input_wrapper}>
@@ -131,7 +129,7 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
               id="cryptoCurrency"
               placeholder="숫자를 입력해주세요."
               value={cryptoPrice}
-              onChange={handleCryptoChange}
+              onChange={onChangeCryptoHandler}
               onKeyDown={() => {
                 resetError('cryptoCurrency');
               }}
@@ -154,8 +152,8 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
               id="currency"
               placeholder="숫자를 입력해주세요."
               value={currencyPrice}
-              onChange={handleCurrencyChange}
-              onPaste={handleCurrencyPaste}
+              onChange={onChangeCurrencyHandelr}
+              onPaste={onPasteCurrencyHandler}
               onKeyDown={e => {
                 resetError('currency');
 
