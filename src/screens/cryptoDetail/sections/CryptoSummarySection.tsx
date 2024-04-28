@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
+import { cryptoPercentage, cryptoPercentageColor } from '@/utils/crypto.ts';
 import { localeCurrencySymbol } from '@/utils/localeCurrency';
 import styles from './CryptoSummarySection.module.scss';
 import type { CoinsDetailRes } from '@/apis/coins';
@@ -51,12 +52,13 @@ const CryptoSummarySection = ({ data }: CryptoSummarySectionProps) => {
             <span
               className={clsx(
                 styles.current_percent,
-                data.market_data.price_change_percentage_24h_in_currency[currency] >= 0
-                  ? 'text-trends-upward'
-                  : 'text-trends-downward'
+                cryptoPercentageColor(
+                  data.market_data.price_change_percentage_24h_in_currency[currency]
+                )
               )}
             >
-              {data.market_data.price_change_percentage_24h_in_currency[currency]}%
+              {cryptoPercentage(data.market_data.price_change_percentage_24h_in_currency[currency])}
+              %
             </span>
           </div>
           <div className="text-right">
@@ -66,12 +68,10 @@ const CryptoSummarySection = ({ data }: CryptoSummarySectionProps) => {
             <span
               className={clsx(
                 styles.current_percent,
-                data.market_data.price_change_percentage_24h >= 0
-                  ? 'text-trends-upward'
-                  : 'text-trends-downward'
+                cryptoPercentageColor(data.market_data.price_change_percentage_24h_in_currency.btc)
               )}
             >
-              {data.market_data.price_change_percentage_24h}%
+              {cryptoPercentage(data.market_data.price_change_percentage_24h_in_currency.btc)}%
             </span>
           </div>
         </div>

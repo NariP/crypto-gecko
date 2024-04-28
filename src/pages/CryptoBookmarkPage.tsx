@@ -1,12 +1,15 @@
 import { Suspense } from 'react';
 import ContentsLoader from '@/components/ContentsLoader';
+import Page from '@/components/Page';
 import CryptoBookmarkContents from '@/screens/crypto/cryptoBookmark/CryptoBookmarkContents';
 
 const CryptoBookmarkPage = () => {
   return (
-    <Suspense fallback={<ContentsLoader />}>
-      <CryptoBookmarkContents />
-    </Suspense>
+    <Page>
+      <Suspense fallback={<ContentsLoader />}>
+        <CryptoBookmarkContents />
+      </Suspense>
+    </Page>
   );
 };
 

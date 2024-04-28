@@ -18,7 +18,7 @@ const CryptoHomeToolbar = () => {
   const setToolbarOption = useCryptoHomeToolbarStore(state => state.setToolbarOptions);
 
   return (
-    <section className="flex gap-2">
+    <section className="contents_section flex flex-wrap gap-2">
       <ListBox
         selected={DISPLAY_OPTIONS.find(o => o.id === display) as DisplayOption}
         options={DISPLAY_OPTIONS}

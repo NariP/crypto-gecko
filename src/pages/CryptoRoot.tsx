@@ -17,15 +17,15 @@ const CryptoRoot = () => {
       <TopNav>{pathname === '/crypto/market' ? '코인 홈' : '코인 북마크'}</TopNav>
       <div className="px-x-sm py-y-sm">
         <Tab.Group defaultIndex={defaultIndex}>
-          <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+          <Tab.List className="flex space-x-1 rounded-xl bg-base-primary/40 p-1">
             <Tab
               className={({ selected }) =>
                 clsx(
-                  'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                  'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                  'w-full rounded-lg py-2.5 text-body1-bold leading-5',
+                  'ring-white/60 ring-offset-2 ring-offset-base-primary focus:outline-none focus:ring-2',
                   selected
-                    ? 'bg-white text-blue-700 shadow'
-                    : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+                    ? 'bg-white text-base-primary shadow'
+                    : 'text-gray-500 hover:bg-white/[0.12] hover:text-white'
                 )
               }
               onClick={() => {
@@ -40,11 +40,11 @@ const CryptoRoot = () => {
             <Tab
               className={({ selected }) =>
                 clsx(
-                  'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                  'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                  'w-full rounded-lg py-2.5 text-body1-bold leading-5',
+                  'ring-white/60 ring-offset-2 ring-offset-base-primary focus:outline-none focus:ring-2',
                   selected
-                    ? 'bg-white text-blue-700 shadow'
-                    : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+                    ? 'bg-white text-base-primary shadow'
+                    : 'text-gray-500 hover:bg-white/[0.12] hover:text-white'
                 )
               }
               onClick={() => {
