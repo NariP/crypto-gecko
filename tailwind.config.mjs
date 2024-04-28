@@ -21,7 +21,7 @@ export default {
         error: {
           default: '#E33C3C',
           border: '#FFBFBF',
-          background: '#FFDADA',
+          background: '#FCE8E8',
         },
         trends: {
           upward: '#E45A5A',

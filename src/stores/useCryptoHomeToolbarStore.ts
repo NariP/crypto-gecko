@@ -7,6 +7,7 @@ type State = {
 
 type Actions = {
   setToolbarOptions: (option: { [key in keyof State]?: State[key] }) => void;
+  reset: () => void;
 };
 
 const initialState: State = {
@@ -17,4 +18,7 @@ const initialState: State = {
 export const useCryptoHomeToolbarStore = create<State & Actions>()(set => ({
   ...initialState,
   setToolbarOptions: option => set(() => option),
+  reset: () => {
+    set(initialState);
+  },
 }));

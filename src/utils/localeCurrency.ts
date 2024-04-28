@@ -13,7 +13,8 @@ export const localeCurrencySymbol = (price: number, currency = 'krw') => {
     currency: currency.toUpperCase(),
   });
 
-  return formatter.format(price);
+  const safePrice = price ?? 0;
+  return formatter.format(safePrice);
 };
 
 /** 숫자만 표시 */
@@ -22,7 +23,8 @@ export const localeCurrency = (price: number, currency = 'krw') => {
     currency: currency.toUpperCase(),
   });
 
-  return formatter.format(price);
+  const safePrice = price ?? 0;
+  return formatter.format(safePrice);
 };
 
 /** 통화 심볼만 표시 */

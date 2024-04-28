@@ -1,47 +1,21 @@
-import { useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query';
-import queries from '@/apis/queries';
-import CryptoTable from '@/components/CryptoTable';
-import Page from '@/components/Page';
-import { useCurrencyStore } from '@/stores/useCurrencyStore';
-import type { MarketsListRes } from '@/apis/coins';
+import { isEmpty } from 'lodash-es';
+import { useBookmarksData } from '@/hooks/useBookmarks';
+import CryptoBookmarkTable from '@/screens/crypto/cryptoBookmark/CryptoBookmarkTable';
 
 const CryptoBookmarkContents = () => {
-  const currency = useCurrencyStore(state => state.currency);
-
-  const { data: bookmarkRes } = useSuspenseQuery(queries.bookmarks.list());
-
-  const { data } = useSuspenseInfiniteQuery({
-    ...queries.coins.markets({
-      locale: 'en',
-      per_page: 250,
-      vs_currency: currency,
-      price_change_percentage: '1h,24h,7d',
-      order: 'market_cap_desc',
-      ids: bookmarkRes?.bookmarks.join(','),
-    }),
-    initialPageParam: 1,
-    getNextPageParam: (res: MarketsListRes, allPages) => {
-      // data 없음
-      if (res?.length < 0) {
-        return;
-      }
-      return allPages.length + 1;
-    },
-  });
+  const { bookmarks } = useBookmarksData();
+  if (isEmpty(bookmarks)) {
+    return (
+      <section className="contents_section">
+        <p className="text-base-text text-body1-bold p-[8px]">북마크된 코인이 없습니다.</p>
+      </section>
+    );
+  }
 
   return (
-    <Page>
-      <CryptoTable>
-        <CryptoTable.Header />
-        <CryptoTable.Body>
-          {data?.pages === undefined || data?.pages?.length <= 0 ? (
-            <CryptoTable.RowNoData />
-          ) : (
-            <CryptoTable.Row pages={data.pages} />
-          )}
-        </CryptoTable.Body>
-      </CryptoTable>
-    </Page>
+    <section className="contents_section">
+      <CryptoBookmarkTable ids={bookmarks.join('')} />
+    </section>
   );
 };
 
