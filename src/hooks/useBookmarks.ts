@@ -9,7 +9,7 @@ export const useBookmarksData = (options?: { enabled?: boolean }) => {
     ...options,
   });
 
-  const bookmarks = data?.bookmarks || [];
+  const bookmarks = data?.data?.bookmarks || [];
   return { bookmarks, bookMarksSet: new Set(bookmarks) };
 };
 
