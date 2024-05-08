@@ -10,7 +10,7 @@ export const cryptoPercentage = (percentage: number) => {
   return parseFloat(safeValue.toFixed(1).toString()).toFixed(1);
 };
 
-/** percentage 값에 따라 컬러 변경 반올림한 경우는 어쩌지 */
+/** percentage 값에 따라 컬러 변경 반올림한 경우는 어쩌지(0.003, -0.003 했을 때 똑같이 0.00 인데 이거 색 처리를 어쩔지 고민하다가 안 지움) */
 export const cryptoPercentageColor = (percentage: number) => {
   const safeValue = percentage ?? 0;
   if (safeValue > 0) {

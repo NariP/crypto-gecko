@@ -1,0 +1,16 @@
+.field_wrapper {
+  @apply w-full md:w-[calc(50%_-_4px)];
+}
+
+.input_wrapper {
+  @apply border border-gray-300 rounded-[8px] flex items-center overflow-hidden has-[:focus]:border-base-black
+}
+
+
+.input {
+  @apply px-[8px] py-[12px] flex-1 text-gray-800 text-body1-bold;
+}
+
+.input_error {
+  @apply text-label2-regular text-gray-500 pl-[4px] pt-[4px] h-[16px];
+}

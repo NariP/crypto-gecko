@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Big from 'big.js';
 import { type ZodError, z } from 'zod';
+import TextInput from '@/components/TextInput.tsx';
 import usePrevState from '@/hooks/usePrevState';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
 import { toUpperCoinSymbol } from '@/utils/crypto';
@@ -121,53 +122,48 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     <section className="contents_section">
       <h3 className="text-base-text text-title2-bold pb-[16px]">{symbol} 가격 계산</h3>
       <div className="flex flex-wrap gap-[8px]">
-        <div className={styles.field_wrapper}>
-          <div className={styles.input_wrapper}>
-            <input
-              className={styles.input}
-              type="text"
-              id="cryptoCurrency"
-              placeholder="숫자를 입력해주세요."
-              value={cryptoPrice}
-              onChange={onChangeCryptoHandler}
-              onKeyDown={() => {
-                resetError('cryptoCurrency');
-              }}
-            />
+        <TextInput
+          placeholder="숫자를 입력해주세요."
+          id="cryptoCurrency"
+          value={cryptoPrice}
+          isError={!!errors.cryptoCurrency}
+          helperText={errors.cryptoCurrency}
+          endDecorator={
             <label htmlFor="cryptoCurrency" className={styles.input_label}>
               {symbol}
             </label>
-          </div>
-          <p className={styles.input_error}>{errors.cryptoCurrency}</p>
-        </div>
-
-        <div className={styles.field_wrapper}>
-          <div className={styles.input_wrapper}>
+          }
+          onChange={onChangeCryptoHandler}
+          onKeyDown={() => {
+            resetError('cryptoCurrency');
+          }}
+        />
+        <TextInput
+          id="currency"
+          placeholder="숫자를 입력해주세요."
+          value={currencyPrice}
+          isError={!!errors.currency}
+          helperText={errors.currency}
+          startDecorator={
             <span className="pl-[4px] text-gray-500 text-label1-bold">
               {localeSymbol(currency)}
             </span>
-            <input
-              className={styles.input}
-              type="text"
-              id="currency"
-              placeholder="숫자를 입력해주세요."
-              value={currencyPrice}
-              onChange={onChangeCurrencyHandelr}
-              onPaste={onPasteCurrencyHandler}
-              onKeyDown={e => {
-                resetError('currency');
-
-                if (e.key === '.') {
-                  e.preventDefault();
-                }
-              }}
-            />
+          }
+          endDecorator={
             <label htmlFor="currency" className={styles.input_label}>
               {currency.toUpperCase()}
             </label>
-          </div>
-          <p className={styles.input_error}>{errors.currency}</p>
-        </div>
+          }
+          onChange={onChangeCurrencyHandelr}
+          onPaste={onPasteCurrencyHandler}
+          onKeyDown={e => {
+            resetError('currency');
+
+            if (e.key === '.') {
+              e.preventDefault();
+            }
+          }}
+        />
       </div>
       <ul className="text-gray-600 bg-gray-100 text-label2-regular rounded-[4px] p-[8px] mt-[16px] md:mt-[8px]">
         <li className="text-inherit">
