@@ -19,12 +19,12 @@ http://localhost:3000/
 
 
 ### 프로젝트 구조
-프로젝트에 사용: Vite, React, ts
-UI: tailwind, headlessui, clsx, scss
-클라이언트 전역 상태관리: zustand
-api 관련: axios, react-query, query-key-factory, qs
-포멧팅, 린팅: eslint, prettier
-유틸성: lodash-es, big.js(소숫점 연산), zod(validation), ts-pattern(필요할 것 같아서 설치했는데 삭제 못함)
+- 프로젝트에 사용: Vite, React, ts
+- UI: tailwind, headlessui, clsx, scss
+- 클라이언트 전역 상태관리: zustand
+- api 관련: axios, react-query, query-key-factory, qs
+- 포멧팅, 린팅: eslint, prettier
+- 유틸성: lodash-es, big.js(소숫점 연산), zod(validation), ts-pattern(필요할 것 같아서 설치했는데 삭제 못함)
 
 **북마크**
 - msw 로 모킹하여 진행
@@ -33,7 +33,8 @@ api 관련: axios, react-query, query-key-factory, qs
 - 타입은 swagger 기준으로 자동생성 함
 
 **폴더 구조**
-<img width="185" alt="image" src="https://github.com/NariP/crypto-gecko/assets/23569208/bd88e144-82e5-47df-9476-c64759a8fa81">
+<img style="display: block;" width="185" alt="image" src="https://github.com/NariP/crypto-gecko/assets/23569208/bd88e144-82e5-47df-9476-c64759a8fa81">
+
 - @types: 사용하는 타입들
 - apis: api 코드 모음
 - components: 공용컴포넌트
@@ -47,7 +48,12 @@ api 관련: axios, react-query, query-key-factory, qs
 - stores: zustand store
 - utils: 유틸 함수들
 
+**페이지 구조**
+- Page > contents(페이지를 구성하는 api 데이터 사용, 로더 표시) > section
+- GET 에러 발생 > 글로벌 에러 UI 표시 (기본 설정)
+- Mutation 에러 발생 > mutation 사용처에서 처리 또는 에러 토스트 (기본 설정)
+- JS 에러 발생 > 글로벌 에러 UI 표시
 
-가격계산 부분
+**가격계산 부분**
 - 암호화폐 부분 인풋에 0을 넣으면 krw 여도 0이 입력됨
 - 대신 krw 인 경우 인풋에 0 입력 안됨
