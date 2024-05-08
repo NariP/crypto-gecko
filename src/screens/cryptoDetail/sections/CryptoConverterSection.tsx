@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Big from 'big.js';
 import { type ZodError, z } from 'zod';
 import TextInput from '@/components/TextInput.tsx';
 import usePrevState from '@/hooks/usePrevState';
+import Big from '@/libs/Big';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
 import { toUpperCoinSymbol } from '@/utils/crypto';
 import { localeCurrency, localeSymbol } from '@/utils/localeCurrency';
@@ -28,7 +28,6 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     localeCurrency(currentCurrencyPrice, currency)
   );
   const [errors, setErrors] = useState<Record<InputKeys, string>>(INITIAL_ERRORS);
-
   const resetError = (name?: 'cryptoCurrency' | 'currency') => {
     setErrors(prev => (name ? { ...prev, [name]: '' } : INITIAL_ERRORS));
   };
@@ -42,12 +41,8 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
   useEffect(() => {
     // data 가 변경되어 currentCurrencyPrice 변경이 있는 경우에만 최신값 기준으로 value 세팅
     if (currentCurrencyPrice !== prevCurrentCurrencyPrice) {
-      setCurrencyPrice(
-        localeCurrency(
-          parseFloat(covertCryptoToCurrency(cryptoPrice, currentCurrencyPrice)),
-          currency
-        )
-      );
+      const currencyPrice = covertCryptoToCurrency(cryptoPrice, currentCurrencyPrice);
+      setCurrencyPrice(currencyPrice === '' ? '' : localeCurrency(parseFloat(currencyPrice)));
       resetError('currency');
     }
   }, [currentCurrencyPrice, cryptoPrice, currency, prevCurrentCurrencyPrice]);
@@ -172,17 +167,30 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
   );
 };
 
-const covertCryptoToCurrency = (crypto: string, coinPriceInCurrency: number) => {
-  const bigCrypto = new Big(crypto);
-  const bigCoinPriceInCurrency = new Big(coinPriceInCurrency);
-  return bigCrypto.times(bigCoinPriceInCurrency).toFixed(2, 1);
+const covertCryptoToCurrency = (crypto: string, coinPriceInCurrency: number, fallback = '') => {
+  const bigCrypto = Big(crypto).safeBig(fallback);
+  const bigCoinPriceInCurrency = Big(coinPriceInCurrency).safeBig(fallback);
+
+  if (bigCrypto.isSuccess && bigCoinPriceInCurrency.isSuccess) {
+    return bigCrypto.bigNum.times(bigCoinPriceInCurrency.bigNum).toFixed(2, 1);
+  }
+
+  return fallback;
 };
 
-const convertCurrencyToCrypto = (currentPrice: string, coinPriceInCurrency: number) => {
-  const bigCurrentPrice = new Big(currentPrice);
-  const bigCoinPriceInCurrency = new Big(coinPriceInCurrency);
+const convertCurrencyToCrypto = (
+  currentPrice: string,
+  coinPriceInCurrency: number,
+  fallback = ''
+) => {
+  const bigCurrentPrice = Big(currentPrice).safeBig(fallback);
+  const bigCoinPriceInCurrency = Big(coinPriceInCurrency).safeBig(fallback);
 
-  return bigCurrentPrice.div(bigCoinPriceInCurrency).toFixed(8, 1);
+  if (bigCurrentPrice.isSuccess && bigCoinPriceInCurrency.isSuccess) {
+    return bigCurrentPrice.bigNum.div(bigCoinPriceInCurrency.bigNum).toFixed(8, 1);
+  }
+
+  return fallback;
 };
 
 const cryptoCurrencySchema = z.string().refine(
