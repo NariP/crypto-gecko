@@ -134,9 +134,6 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
             </label>
           }
           onChange={onChangeCryptoHandler}
-          onKeyDown={() => {
-            resetError('cryptoCurrency');
-          }}
         />
         <TextInput
           id="currency"
@@ -157,8 +154,6 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
           onChange={onChangeCurrencyHandelr}
           onPaste={onPasteCurrencyHandler}
           onKeyDown={e => {
-            resetError('currency');
-
             if (e.key === '.') {
               e.preventDefault();
             }
