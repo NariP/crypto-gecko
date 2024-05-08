@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 import CryptoBookmarkPage from '@/pages/CryptoBookmarkPage';
 import CryptoDetailPage from '@/pages/CryptoDetailPage';
 import CryptoRoot from '@/pages/CryptoRoot';
@@ -10,6 +10,10 @@ const router = createBrowserRouter(
   [
     {
       path: '/',
+      element: <Navigate to="/crypto/market" />,
+    },
+    {
+      path: '/crypto',
       element: <CryptoRoot />,
       children: [
         {
