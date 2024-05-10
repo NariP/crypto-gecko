@@ -16,7 +16,7 @@ const CryptoRoot = () => {
     resetHomeToolbar();
   }, [resetHomeToolbar, restCurrencyStore]);
 
-  if (pathname === '/') {
+  if (pathname === '/crypto' || pathname === '/crypto/') {
     return <Navigate replace to="/crypto/market" />;
   }
 

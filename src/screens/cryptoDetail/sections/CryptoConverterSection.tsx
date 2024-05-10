@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import Big from 'big.js';
 import { type ZodError, z } from 'zod';
+import TextInput from '@/components/TextInput.tsx';
 import usePrevState from '@/hooks/usePrevState';
 import { useCurrencyStore } from '@/stores/useCurrencyStore';
-import { toUpperCoinSymbol } from '@/utils/crypto';
+import { convertCurrencyToCrypto, covertCryptoToCurrency, toUpperCoinSymbol } from '@/utils/crypto';
 import { localeCurrency, localeSymbol } from '@/utils/localeCurrency';
 import styles from './CryptoConverterSection.module.scss';
+import type { Currency } from '@/@types/currency';
 import type { CoinsDetailRes } from '@/apis/coins';
 
 interface CryptoConverterSectionProps {
@@ -27,7 +28,6 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     localeCurrency(currentCurrencyPrice, currency)
   );
   const [errors, setErrors] = useState<Record<InputKeys, string>>(INITIAL_ERRORS);
-
   const resetError = (name?: 'cryptoCurrency' | 'currency') => {
     setErrors(prev => (name ? { ...prev, [name]: '' } : INITIAL_ERRORS));
   };
@@ -41,15 +41,20 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
   useEffect(() => {
     // data 가 변경되어 currentCurrencyPrice 변경이 있는 경우에만 최신값 기준으로 value 세팅
     if (currentCurrencyPrice !== prevCurrentCurrencyPrice) {
-      setCurrencyPrice(
-        localeCurrency(
-          parseFloat(covertCryptoToCurrency(cryptoPrice, currentCurrencyPrice)),
-          currency
-        )
-      );
-      resetError('currency');
+      const currencyPrice = covertCryptoToCurrency(cryptoPrice, currentCurrencyPrice);
+      setCurrencyPrice(currencyPrice === '' ? '' : localeCurrency(parseFloat(currencyPrice)));
+      resetError();
     }
   }, [currentCurrencyPrice, cryptoPrice, currency, prevCurrentCurrencyPrice]);
+
+  const cryptoCurrencyUpdater = (value: string) => {
+    setCryptoPrice(value);
+    const currencyPrice =
+      value === ''
+        ? ''
+        : localeCurrency(parseFloat(covertCryptoToCurrency(value, currentCurrencyPrice)), currency);
+    setCurrencyPrice(currencyPrice);
+  };
 
   const onChangeCryptoHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -60,60 +65,41 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
       return;
     }
 
-    setCryptoPrice(value);
-    const currencyPrice =
-      value === ''
-        ? ''
-        : localeCurrency(parseFloat(covertCryptoToCurrency(value, currentCurrencyPrice)), currency);
-    setCurrencyPrice(currencyPrice);
+    cryptoCurrencyUpdater(value);
     resetError();
   };
 
-  const onChangeCurrencyHandelr = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const currencyCryptoUpdater = (value: string) => {
+    setCurrencyPrice(value === '' ? '' : localeCurrency(parseFloat(value), currency));
+    const cryptoPrice = convertCurrencyToCrypto(value, currentCurrencyPrice);
+    setCryptoPrice(cryptoPrice);
+  };
+
+  const onChangeCurrencyHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value: rawValue } = event.target;
     const value = rawValue.replace(/,/g, '');
 
-    const currencyValidation = currencySchema.safeParse(value);
-    if (!currencyValidation.success) {
-      updateError(currencyValidation.error, 'currency');
+    const validation = currencyChangeSchema(currency).safeParse(value);
+    if (!validation.success) {
+      updateError(validation.error, 'currency');
       return;
     }
 
-    if (currency === 'krw') {
-      const krwValidation = krwSchema.safeParse(value);
-      if (!krwValidation.success) {
-        updateError(krwValidation.error, 'currency');
-        return;
-      }
-    }
-
-    setCurrencyPrice(value === '' ? '' : localeCurrency(parseFloat(value), currency));
-    const cryptoPrice = value === '' ? '' : convertCurrencyToCrypto(value, currentCurrencyPrice);
-    setCryptoPrice(cryptoPrice);
+    currencyCryptoUpdater(value);
     resetError();
   };
 
   const onPasteCurrencyHandler = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
+    const value = getPasteValue(event);
 
-    const value = event.clipboardData.getData('text/plain');
-
-    const currencyValidation = currencyPasteSchema.safeParse(value);
-    if (!currencyValidation.success) {
-      updateError(currencyValidation.error, 'currency');
+    const validation = currencyPasteSchema(currency).safeParse(value);
+    if (!validation.success) {
+      updateError(validation.error, 'currency');
       return;
     }
 
-    if (currency === 'krw') {
-      const krwValidation = krwSchema.safeParse(value);
-      if (!krwValidation.success) {
-        return;
-      }
-    }
-
-    setCurrencyPrice(value === '' ? '' : localeCurrency(parseFloat(value), currency));
-    const cryptoPrice = value === '' ? '' : convertCurrencyToCrypto(value, currentCurrencyPrice);
-    setCryptoPrice(cryptoPrice);
+    currencyCryptoUpdater(value);
     resetError();
   };
 
@@ -121,53 +107,43 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
     <section className="contents_section">
       <h3 className="text-base-text text-title2-bold pb-[16px]">{symbol} 가격 계산</h3>
       <div className="flex flex-wrap gap-[8px]">
-        <div className={styles.field_wrapper}>
-          <div className={styles.input_wrapper}>
-            <input
-              className={styles.input}
-              type="text"
-              id="cryptoCurrency"
-              placeholder="숫자를 입력해주세요."
-              value={cryptoPrice}
-              onChange={onChangeCryptoHandler}
-              onKeyDown={() => {
-                resetError('cryptoCurrency');
-              }}
-            />
+        <TextInput
+          placeholder="숫자를 입력해주세요."
+          id="cryptoCurrency"
+          value={cryptoPrice}
+          isError={!!errors.cryptoCurrency}
+          helperText={errors.cryptoCurrency}
+          endDecorator={
             <label htmlFor="cryptoCurrency" className={styles.input_label}>
               {symbol}
             </label>
-          </div>
-          <p className={styles.input_error}>{errors.cryptoCurrency}</p>
-        </div>
-
-        <div className={styles.field_wrapper}>
-          <div className={styles.input_wrapper}>
+          }
+          onChange={onChangeCryptoHandler}
+        />
+        <TextInput
+          id="currency"
+          placeholder="숫자를 입력해주세요."
+          value={currencyPrice}
+          isError={!!errors.currency}
+          helperText={errors.currency}
+          startDecorator={
             <span className="pl-[4px] text-gray-500 text-label1-bold">
               {localeSymbol(currency)}
             </span>
-            <input
-              className={styles.input}
-              type="text"
-              id="currency"
-              placeholder="숫자를 입력해주세요."
-              value={currencyPrice}
-              onChange={onChangeCurrencyHandelr}
-              onPaste={onPasteCurrencyHandler}
-              onKeyDown={e => {
-                resetError('currency');
-
-                if (e.key === '.') {
-                  e.preventDefault();
-                }
-              }}
-            />
+          }
+          endDecorator={
             <label htmlFor="currency" className={styles.input_label}>
               {currency.toUpperCase()}
             </label>
-          </div>
-          <p className={styles.input_error}>{errors.currency}</p>
-        </div>
+          }
+          onChange={onChangeCurrencyHandler}
+          onPaste={onPasteCurrencyHandler}
+          onKeyDown={e => {
+            if (e.key === '.') {
+              e.preventDefault();
+            }
+          }}
+        />
       </div>
       <ul className="text-gray-600 bg-gray-100 text-label2-regular rounded-[4px] p-[8px] mt-[16px] md:mt-[8px]">
         <li className="text-inherit">
@@ -181,17 +157,8 @@ const CryptoConverterSection = ({ data }: CryptoConverterSectionProps) => {
   );
 };
 
-const covertCryptoToCurrency = (crypto: string, coinPriceInCurrency: number) => {
-  const bigCrypto = new Big(crypto);
-  const bigCoinPriceInCurrency = new Big(coinPriceInCurrency);
-  return bigCrypto.times(bigCoinPriceInCurrency).toFixed(2, 1);
-};
-
-const convertCurrencyToCrypto = (currentPrice: string, coinPriceInCurrency: number) => {
-  const bigCurrentPrice = new Big(currentPrice);
-  const bigCoinPriceInCurrency = new Big(coinPriceInCurrency);
-
-  return bigCurrentPrice.div(bigCoinPriceInCurrency).toFixed(8, 1);
+const getPasteValue = (event: React.ClipboardEvent<HTMLInputElement>) => {
+  return event.clipboardData.getData('text/plain');
 };
 
 const cryptoCurrencySchema = z.string().refine(
@@ -204,27 +171,40 @@ const cryptoCurrencySchema = z.string().refine(
   }
 );
 
-const currencySchema = z.string().refine(
-  val => {
-    return /^\d*\.?\d*$/.test(val);
-  },
-  { message: '입력 가능한 형식을 확인해주세요.' }
-);
+// config
 
-const currencyPasteSchema = z.string().refine(
-  val => {
-    return /^\d+$/.test(val);
-  },
-  {
-    message: '숫자만 붙여넣기 가능합니다.',
-  }
-);
+const currencyChangeSchema = (currency: Currency) =>
+  z
+    .string()
+    .refine(
+      val => {
+        return /^\d*\.?\d*$/.test(val);
+      },
+      { message: '입력 가능한 형식을 확인해주세요.' }
+    )
+    .refine(
+      val => {
+        return currency === 'krw' ? !val.startsWith('0') : true;
+      },
+      { message: 'KRW 는 0으로 시작할 수 없습니다.' }
+    );
 
-const krwSchema = z.string().refine(
-  val => {
-    return !val.startsWith('0');
-  },
-  { message: 'KRW 는 0으로 시작할 수 없습니다.' }
-);
+const currencyPasteSchema = (currency: Currency) =>
+  z
+    .string()
+    .refine(
+      val => {
+        return /^\d+$/.test(val);
+      },
+      {
+        message: '숫자만 붙여넣기 가능합니다.',
+      }
+    )
+    .refine(
+      val => {
+        return currency === 'krw' ? !val.startsWith('0') : true;
+      },
+      { message: 'KRW 는 0으로 시작할 수 없습니다.' }
+    );
 
 export default CryptoConverterSection;
